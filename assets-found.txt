@@ -1,0 +1,99 @@
+﻿=== ASSETS FOUND / MISSING ===
+FOUND alina-1-compressed.webp  (ref: https://storage.yandexcloud.net/modeli/media/models/alina/alina-1-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\Алина\alina-1-compressed.webp
+FOUND best-escort-moscow.webp  (ref: media/best-escort-moscow.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\best-escort-moscow.webp
+    C:\Users\HUAWEI\Downloads\mme\Разное\Best-escort-Moscow.webp
+FOUND constant.webp  (ref: media/constant.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\constant.webp
+FOUND faq.webp  (ref: media/faq.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\faq.webp
+FOUND imagemodel.mp4  (ref: media/imagemodel.mp4)
+    C:\Users\HUAWEI\Downloads\mme\imagemodel.mp4
+    C:\Users\HUAWEI\Downloads\mme\Разное\imagemodel.mp4
+FOUND imagemodel.webp  (ref: media/imagemodel.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\imagemodel.webp
+FOUND interview.webp  (ref: https://storage.yandexcloud.net/modeli/media/interview.webp)
+    C:\Users\HUAWEI\Downloads\mme\mysite\interview.webp
+FOUND kate-1-compressed.webp  (ref: media/models/kate/kate-1-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-1-compressed.webp
+FOUND kate-2-compressed.webp  (ref: media/models/kate/kate-2-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-2-compressed.webp
+FOUND kate-3-compressed.webp  (ref: media/models/kate/kate-3-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-3-compressed.webp
+FOUND kate-4-compressed.webp  (ref: media/models/kate/kate-4-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-4-compressed.webp
+FOUND kate-5-compressed.webp  (ref: media/models/kate/kate-5-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-5-compressed.webp
+MISSING kris-1-compressed.webp  (ref: https://storage.yandexcloud.net/modeli/media/models/Kristina/kris-1-compressed.webp)
+FOUND lena-1-compressed.webp  (ref: https://storage.yandexcloud.net/modeli/media/models/lena/lena-1-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\Лена\фото\lena-1-compressed.webp
+FOUND life.webp  (ref: media/life.webp)
+    C:\Users\HUAWEI\Downloads\я\life.webp
+FOUND lizz-1-compressed.webp  (ref: media/models/lizz/lizz-1-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-1-compressed.webp
+FOUND lizz-2-compressed.webp  (ref: media/models/lizz/lizz-2-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-2-compressed.webp
+FOUND lizz-3-compressed.webp  (ref: media/models/lizz/lizz-3-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-3-compressed.webp
+FOUND lizz-4-compressed.webp  (ref: media/models/lizz/lizz-4-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-4-compressed.webp
+FOUND lizz-5-compressed.webp  (ref: media/models/lizz/lizz-5-compressed.webp)
+    C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-5-compressed.webp
+MISSING logo-placeholder.webp  (ref: media/logo-placeholder.webp)
+FOUND new-01-1.webp  (ref: media/newmodels/new-01-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-01-1.webp
+FOUND new-02-1.webp  (ref: media/newmodels/new-02-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-02-1.webp
+FOUND new-03-1.webp  (ref: media/newmodels/new-03-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-03-1.webp
+FOUND new-04-1.webp  (ref: media/newmodels/new-04-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-04-1.webp
+FOUND new-05-1.webp  (ref: media/newmodels/new-05-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-05-1.webp
+FOUND new-06-1.webp  (ref: media/newmodels/new-06-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-06-1.webp
+FOUND new-07-1.webp  (ref: media/newmodels/new-07-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-07-1.webp
+FOUND new-08-1.webp  (ref: media/newmodels/new-08-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-08-1.webp
+FOUND new-09-1.webp  (ref: media/newmodels/new-09-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-09-1.webp
+FOUND new-10-1.webp  (ref: media/newmodels/new-10-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-10-1.webp
+FOUND new-11-1.webp  (ref: media/newmodels/new-11-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-11-1.webp
+FOUND new-12-1.webp  (ref: media/newmodels/new-12-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-12-1.webp
+FOUND new-13-1.webp  (ref: media/newmodels/new-13-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-13-1.webp
+FOUND olya-1.webp  (ref: https://storage.yandexcloud.net/modeli/media/models/olya/olya-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\3t\фото\olya-1.webp
+FOUND party.mp4  (ref: media/party.mp4)
+    C:\Users\HUAWEI\Downloads\mme\mysite\party.mp4
+MISSING party.webp  (ref: media/party.webp)
+FOUND romantic.webp  (ref: media/romantic.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\romantic.webp
+FOUND slide-1.webp  (ref: media/slide-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\slide-1.webp
+    C:\Users\HUAWEI\Downloads\mme\Разное\slide-1.webp
+FOUND slide-2.webp  (ref: media/slide-2.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\slide-2.webp
+    C:\Users\HUAWEI\Downloads\mme\Разное\slide-2.webp
+FOUND slide-3.webp  (ref: media/slide-3.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\slide-3.webp
+    C:\Users\HUAWEI\Downloads\mme\Разное\slide-3.webp
+FOUND slide-4.webp  (ref: media/slide-4.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\slide-4.webp
+    C:\Users\HUAWEI\Downloads\mme\Разное\slide-4.webp
+FOUND slide-5.webp  (ref: media/slide-5.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\slide-5.webp
+    C:\Users\HUAWEI\Downloads\mme\Разное\slide-5.webp
+FOUND tanya-1.webp  (ref: https://storage.yandexcloud.net/modeli/media/models/tanya/tanya-1.webp)
+    C:\Users\HUAWEI\Downloads\mme\Модели\Таня\фото\tanya-1.webp
+FOUND travel.webp  (ref: media/travel.webp)
+    C:\Users\HUAWEI\Downloads\mme\media\travel.webp
+MISSING zenya-1-compressed.webp  (ref: https://storage.yandexcloud.net/modeli/media/models/zenya/zenya-1-compressed.webp)
+
+total unique: 46 | found: 42 | missing: 4
+=== search done, nothing moved ===

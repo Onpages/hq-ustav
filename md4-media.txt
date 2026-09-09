@@ -1,0 +1,53 @@
+﻿=== MD-4: MEDIA GLUE ===
+unique references: 46
+COPIED: media/interview.webp <- C:\Users\HUAWEI\Downloads\modeli\archive\v-main\interview.webp
+COPIED: media/models/alina/alina-1-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\Алина\alina-1-compressed.webp
+COPIED: media/models/kate/kate-1-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-1-compressed.webp
+DOWNLOADED: media/models/Kristina/kris-1-compressed.webp
+COPIED: media/models/lena/lena-1-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\Лена\фото\lena-1-compressed.webp
+COPIED: media/models/lizz/lizz-1-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-1-compressed.webp
+COPIED: media/models/olya/olya-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\3t\фото\olya-1.webp
+COPIED: media/models/tanya/tanya-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\Таня\фото\tanya-1.webp
+DOWNLOADED: media/models/zenya/zenya-1-compressed.webp
+COPIED: media/constant.webp <- C:\Users\HUAWEI\Downloads\mme\media\constant.webp
+COPIED: media/imagemodel.mp4 <- C:\Users\HUAWEI\Downloads\mme\imagemodel.mp4
+COPIED: media/imagemodel.webp <- C:\Users\HUAWEI\Downloads\mme\media\imagemodel.webp
+MISSING: media/life.webp (ref: media/life.webp)
+MISSING: media/logo-placeholder.webp (ref: media/logo-placeholder.webp)
+ALREADY: media/models/kate/kate-1-compressed.webp
+COPIED: media/models/kate/kate-2-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-2-compressed.webp
+COPIED: media/models/kate/kate-3-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-3-compressed.webp
+COPIED: media/models/kate/kate-4-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-4-compressed.webp
+COPIED: media/models/kate/kate-5-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\kate-5-compressed.webp
+ALREADY: media/models/lizz/lizz-1-compressed.webp
+COPIED: media/models/lizz/lizz-2-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-2-compressed.webp
+COPIED: media/models/lizz/lizz-3-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-3-compressed.webp
+COPIED: media/models/lizz/lizz-4-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-4-compressed.webp
+COPIED: media/models/lizz/lizz-5-compressed.webp <- C:\Users\HUAWEI\Downloads\mme\compressed-images\lizz-5-compressed.webp
+COPIED: media/newmodels/new-01-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-01-1.webp
+COPIED: media/newmodels/new-02-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-02-1.webp
+COPIED: media/newmodels/new-03-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-03-1.webp
+COPIED: media/newmodels/new-04-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-04-1.webp
+COPIED: media/newmodels/new-05-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-05-1.webp
+COPIED: media/newmodels/new-06-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-06-1.webp
+COPIED: media/newmodels/new-07-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-07-1.webp
+COPIED: media/newmodels/new-08-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-08-1.webp
+COPIED: media/newmodels/new-09-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-09-1.webp
+COPIED: media/newmodels/new-10-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-10-1.webp
+COPIED: media/newmodels/new-11-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-11-1.webp
+COPIED: media/newmodels/new-12-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-12-1.webp
+COPIED: media/newmodels/new-13-1.webp <- C:\Users\HUAWEI\Downloads\mme\Модели\resized-images\new-13-1.webp
+COPIED: media/party.mp4 <- C:\Users\HUAWEI\Downloads\mme\mysite\party.mp4
+MISSING: media/party.webp (ref: media/party.webp)
+COPIED: media/romantic.webp <- C:\Users\HUAWEI\Downloads\mme\media\romantic.webp
+COPIED: media/slide-1.webp <- C:\Users\HUAWEI\Downloads\mme\media\slide-1.webp
+COPIED: media/slide-2.webp <- C:\Users\HUAWEI\Downloads\mme\media\slide-2.webp
+COPIED: media/slide-3.webp <- C:\Users\HUAWEI\Downloads\mme\media\slide-3.webp
+COPIED: media/slide-4.webp <- C:\Users\HUAWEI\Downloads\mme\media\slide-4.webp
+COPIED: media/slide-5.webp <- C:\Users\HUAWEI\Downloads\mme\media\slide-5.webp
+COPIED: media/travel.webp <- C:\Users\HUAWEI\Downloads\mme\media\travel.webp
+ENSURE-COPIED: media/party-poster.webp <- C:\Users\HUAWEI\Downloads\mme\media\party-poster.webp
+
+copied=40 renamed=0 downloaded=2 skipped=0 missing=3
+NOTE: refs to renamed files and poster swap are rewritten in page tasks MD-5/MD-7
+=== MD-4 done ===

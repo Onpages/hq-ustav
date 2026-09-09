@@ -1,0 +1,27 @@
+﻿=== FULL TREE SCAN of modeli ===
+
+--- HTML (all subfolders) ---
+  archive\v-header\index.html (8.9 KB, 04.09.26 01:24)
+  archive\v-main\index.html (69.4 KB, 02.09.26 23:04)
+
+--- CSS (all subfolders) ---
+  archive\v-header\style.css (15.1 KB)
+  archive\v-main\style.css (64.5 KB)
+
+--- JS (all subfolders) ---
+  archive\v-header\app.js (11.1 KB)
+  archive\v-main\app.js (42.4 KB)
+
+--- DIRECTORIES with media counts ---
+
+--- TOP-LEVEL ENTRIES ---
+  DIR  archive
+  DIR  docs
+  DIR  site
+  FILE concept.txt
+  FILE inventory-real.ps1
+  FILE inventory-tree.ps1
+  FILE inventory.ps1
+  FILE QWEN-modeli.md
+
+=== scan done, nothing changed ===

@@ -1,0 +1,18 @@
+﻿=== INVENTORY modeli (real structure) ===
+
+--- ROOT HTML FILES ---
+
+--- ROOT CSS FILES ---
+
+--- ROOT JS FILES ---
+
+--- MEDIA FOLDER ---
+  FOLDER NOT FOUND
+
+--- MODELS FOLDER ---
+  FOLDER NOT FOUND
+
+--- NEWMODELS FOLDER ---
+  FOLDER NOT FOUND
+
+=== inventory done, nothing changed ===

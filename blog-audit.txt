@@ -1,0 +1,27 @@
+﻿=== MD-7a: BLOG TIER S/B AUDIT (codes and line numbers only) ===
+
+--- modeling.html ---
+  [S1] tierS=0 tierB=0
+  [S2] tierS=0 tierB=0
+  [S3] tierS=0 tierB=0
+  [S4] tierS=0 tierB=0
+
+--- tuskovki.html ---
+  [S1] tierS=0 tierB=0
+  [S2] tierS=0 tierB=0
+  [S3] tierS=0 tierB=0
+  [S4] tierS=0 tierB=0
+
+--- tuskovki-pravda.html ---
+  [S1] tierS=0 tierB=0
+  [S2] tierS=0 tierB=0
+  [S3] tierS=0 tierB=0
+  [S4] tierS=0 tierB=0
+
+--- tuskovki-zarabotok.html ---
+  [S1] tierS=0 tierB=0
+  [S2] tierS=0 tierB=0
+  [S3] tierS=0 tierB=0
+  [S4] tierS=0 tierB=0
+
+=== audit done, nothing changed ===
