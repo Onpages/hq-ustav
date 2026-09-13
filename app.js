@@ -1,9 +1,9 @@
-(function(){
-"use strict";
+// BUILD 13: слайдер требований после первой книжки
+// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 
-// === ОРИГИНАЛЬНЫЙ ФУНКЦИОНАЛ САЙТА ===
+// === INTERSECTION OBSERVER ДЛЯ АНИМАЦИЙ ===
 const io = new IntersectionObserver(es => {
  es.forEach(e => {
  if (e.isIntersecting) {
@@ -20,157 +20,21 @@ $$('section > span:first-child, header section > span:first-child').forEach(s =>
  if (!s.className) s.classList.add('kicker');
 });
 
-$$('.cinema').forEach(cinema => {
- const chapters = $$('.cinema-chapter', cinema),
- track = $('.cinema-track', cinema),
- dotsWrap = $$('.cinema-dots', cinema)[0] || $('.cinema-dots', cinema);
- if (!track || !dotsWrap || !chapters.length) return;
-
- const layer = document.createElement('div');
- layer.className = 'cinema-photo';
- const imgs = chapters.map((ch, i) => {
- const img = document.createElement('img');
- img.src = ch.dataset.photo;
- img.alt = ch.dataset.title || '';
- img.loading = i === 0 ? 'eager' : 'lazy';
- layer.appendChild(img);
- ch.style.backgroundImage = 'url("' + ch.dataset.photo + '")';
- const b = document.createElement('button');
- b.setAttribute('aria-label', ch.dataset.title || '');
- b.innerHTML = '<span>' + (ch.dataset.title || '') + '</span>';
- b.addEventListener('click', () => ch.scrollIntoView({ behavior: 'smooth', block: 'start' }));
- dotsWrap.appendChild(b);
- return img;
- });
- track.prepend(layer);
-
- const dbtns = $$('button', dotsWrap);
- let cur = -1;
- function set(i) {
- if (i === cur || i < 0 || i >= imgs.length) return;
- cur = i;
- imgs.forEach((im, k) => im.classList.toggle('on', k === i));
- dbtns.forEach((d, k) => {
- d.classList.toggle('on', k === i);
- d.classList.toggle('next', k === i + 1);
- });
- }
-
- const cio = new IntersectionObserver(es => {
- es.forEach(e => {
- if (e.isIntersecting) set(chapters.indexOf(e.target));
- });
- }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
- chapters.forEach(ch => cio.observe(ch));
- set(0);
-
- let sheet = $('.cinema-sheet');
- if (!sheet) {
- sheet = document.createElement('div');
- sheet.className = 'cinema-sheet';
- sheet.innerHTML = '<div class="sheet-inner"><button class="close-sheet">×</button><div class="sheet-body"></div></div>';
- document.body.appendChild(sheet);
- $('.close-sheet', sheet).addEventListener('click', () => sheet.classList.remove('open'));
- sheet.addEventListener('click', e => {
- if (e.target === sheet) sheet.classList.remove('open');
- });
- document.addEventListener('keydown', e => {
- if (e.key === 'Escape' && sheet.classList.contains('open')) sheet.classList.remove('open');
- });
- }
-
- const body = $('.sheet-body', sheet);
- $$('.cinema-readmore', cinema).forEach((btn, i) => btn.addEventListener('click', () => {
- const ch = chapters[i], t = ch.dataset.title || '';
- body.innerHTML = (t ? '<h3>' + t + '</h3>' : '') + $('.cinema-full', ch).innerHTML;
- sheet.classList.add('open');
- }));
-});
-
-(function(){
- const groups = $$('.highlights');
- if (!groups.length) return;
- const sv = document.createElement('div');
- sv.className = 'sv';
- sv.innerHTML = '<div class="sv-inner"><button class="sv-close">×</button><div class="sv-zone prev"></div><div class="sv-zone next"></div><video></video><div class="sv-progress"></div><div class="sv-info"><img class="sv-ava"><div class="sv-name"></div></div></div>';
- document.body.appendChild(sv);
-
- const video = $('video', sv),
- prog = $('.sv-progress', sv),
- ava = $('.sv-ava', sv),
- nameEl = $('.sv-name', sv);
- let list = [], idx = 0;
-
- function show() {
- $$('i', prog).forEach((s, k) => {
- $('b', s).style.width = k < idx ? '100%' : '0';
- });
- ava.src = list[idx].cover;
- video.src = list[idx].src;
- video.play().catch(() => {
- video.muted = true;
- video.play();
- });
- }
-
- function open(g, st) {
- list = $$('.hl', g).map(b => ({ src: b.dataset.video, cover: $('img', b).src }));
- idx = st;
- nameEl.textContent = g.dataset.name || '';
- prog.innerHTML = list.map(() => '<i><b></b></i>').join('');
- sv.classList.add('open');
- document.body.style.overflow = 'hidden';
- show();
- }
-
- function next() {
- if (idx < list.length - 1) { idx++; show(); } else { close(); }
- }
- function prev() {
- if (idx > 0) { idx--; show(); }
- }
- function close() {
- sv.classList.remove('open');
- document.body.style.overflow = '';
- video.pause();
- video.removeAttribute('src');
- video.load();
- }
-
- video.addEventListener('ended', next);
- video.addEventListener('timeupdate', () => {
- const seg = $$('i', prog)[idx];
- if (seg && video.duration) {
- $('b', seg).style.width = ((video.currentTime / video.duration) * 100) + '%';
- }
- });
-
- $('.sv-close', sv).addEventListener('click', close);
- $('.sv-zone.next', sv).addEventListener('click', next);
- $('.sv-zone.prev', sv).addEventListener('click', prev);
- document.addEventListener('keydown', e => {
- if (e.key === 'Escape' && sv.classList.contains('open')) close();
- });
-
- groups.forEach(g => {
- $$('.hl', g).forEach((b, i) => b.addEventListener('click', () => open(g, i)));
- });
-})();
-
+// === СЛАЙДЕР HERO ===
 (function(){
  const root = document.getElementById('heroSlider') || document.querySelector('.hero-media');
  if (!root) return;
  let tr = root.querySelector('.hero-slides');
  if (!tr) {
- const im0 = root.querySelectorAll('img');
+ const im0 = root.querySelectorAll('.hero-slide');
  if (im0.length < 2) return;
  tr = document.createElement('div');
  tr.className = 'hero-slides';
  im0.forEach(im => tr.appendChild(im));
  root.prepend(tr);
  }
- const imgs = tr.querySelectorAll('img');
- if (imgs.length < 2) return;
+ const slides = tr.querySelectorAll('.hero-slide');
+ if (slides.length < 2) return;
 
  let dw = root.querySelector('.hero-dots');
  if (!dw) {
@@ -180,10 +44,10 @@ $$('.cinema').forEach(cinema => {
  }
 
  let i = 0;
- imgs.forEach((_, k) => {
+ slides.forEach((_, k) => {
  const b = document.createElement('button');
  b.type = 'button';
- b.setAttribute('aria-label', 'Фото ' + (k + 1));
+ b.setAttribute('aria-label', 'Слайд ' + (k + 1));
  if (k === 0) b.classList.add('on');
  b.addEventListener('click', () => go(k));
  dw.appendChild(b);
@@ -191,10 +55,27 @@ $$('.cinema').forEach(cinema => {
 
  const db = dw.querySelectorAll('button');
  function go(k) {
- i = Math.max(0, Math.min(imgs.length - 1, k));
+ i = Math.max(0, Math.min(slides.length - 1, k));
  tr.style.transform = 'translateX(-' + (i * 100) + '%)';
  db.forEach((d, m) => d.classList.toggle('on', m === i));
  }
+
+ // Обработчик клика по имени модели
+ slides.forEach(slide => {
+ const nameLink = slide.querySelector('.hero-slide-name');
+ if (nameLink) {
+ nameLink.addEventListener('click', (e) => {
+ e.preventDefault();
+ const target = slide.getAttribute('data-target');
+ if (target) {
+ const targetEl = document.querySelector(target);
+ if (targetEl) {
+ targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ }
+ }
+ });
+ }
+ });
 
  let x0 = null, y0 = null, hz = null;
  root.addEventListener('touchstart', e => {
@@ -232,36 +113,142 @@ $$('.cinema').forEach(cinema => {
  go(0);
 })();
 
+// === ТОЧКИ-НАВИГАЦИЯ (СКРОЛЛСПАЙ) ===
 (function(){
- const heads = Array.from(document.querySelectorAll('h1, h2'));
- if (!heads.length) return;
- const bar = document.createElement('div');
- bar.className = 'section-dots';
- document.body.appendChild(bar);
- const btns = heads.map(h => {
- const b = document.createElement('button');
- const lb = (h.textContent || '').trim().slice(0, 60);
- b.setAttribute('aria-label', lb);
- b.innerHTML = '<span>' + lb + '</span>';
- b.addEventListener('click', () => h.scrollIntoView({ behavior: 'smooth', block: 'start' }));
- bar.appendChild(b);
- return b;
- });
-
- const io2 = new IntersectionObserver(es => {
- es.forEach(e => {
- if (e.isIntersecting) {
- const idx = heads.indexOf(e.target);
- btns.forEach((b, k) => b.classList.toggle('on', k === idx));
+ // Собираем все целевые блоки: h1, h2 (не внутри .alert-card), .alert-card
+ const targets = [];
+ const disclaimerH2s = new Set();
+ 
+ // Сначала собираем h2 внутри дисклеймеров
+ $$('.alert-card').forEach(card => {
+ const h2 = card.querySelector('h2');
+ if (h2) {
+ disclaimerH2s.add(h2);
+ targets.push({ el: card, type: 'disclaimer', label: h2.textContent.trim() });
  }
  });
- }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
- heads.forEach(h => io2.observe(h));
- btns[0].classList.add('on');
-})();
+ 
+ // h1
+ $$('h1').forEach(h => {
+ targets.push({ el: h, type: 'heading', label: h.textContent.trim() });
+ });
+ 
+ // h2 (исключая те, что внутри .alert-card)
+ $$('h2').forEach(h => {
+ if (!disclaimerH2s.has(h)) {
+ targets.push({ el: h, type: 'heading', label: h.textContent.trim() });
+ }
+ });
+ 
+ if (!targets.length) return;
+ 
+ // Сортируем по порядку в DOM
+ targets.sort((a, b) => {
+ const posA = a.el.compareDocumentPosition(b.el);
+ return posA & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+ });
+ 
+ // Создаём контейнеры
+ const mobileNav = document.createElement('nav');
+ mobileNav.className = 'scroll-dots-mobile';
+ 
+ const desktopNav = document.createElement('nav');
+ desktopNav.className = 'scroll-dots-desktop';
+ 
+ const desktopList = document.createElement('ul');
+ desktopList.className = 'scroll-dots-list';
+ desktopNav.appendChild(desktopList);
+ 
+ // Создаём точки и пункты списка
+ const buttons = [];
+ targets.forEach((target, idx) => {
+ // Мобильная точка
+ const mobileBtn = document.createElement('button');
+ mobileBtn.type = 'button';
+ mobileBtn.className = 'scroll-dot' + (target.type === 'disclaimer' ? ' disclaimer' : '');
+ mobileBtn.setAttribute('aria-label', target.label);
+ mobileBtn.addEventListener('click', () => {
+ target.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ });
+ mobileNav.appendChild(mobileBtn);
+ 
+ // Десктопный пункт
+ const desktopItem = document.createElement('li');
+ const desktopBtn = document.createElement('button');
+ desktopBtn.type = 'button';
+ desktopBtn.className = 'scroll-dot-desktop' + (target.type === 'disclaimer' ? ' disclaimer' : '');
+ desktopBtn.setAttribute('aria-label', target.label);
+ 
+ const labelSpan = document.createElement('span');
+ labelSpan.className = 'scroll-dot-label';
+ labelSpan.textContent = target.label;
+ desktopBtn.appendChild(labelSpan);
+ 
+ desktopBtn.addEventListener('click', () => {
+ target.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ });
+ 
+ desktopItem.appendChild(desktopBtn);
+ desktopList.appendChild(desktopItem);
+ 
+ buttons.push({ mobile: mobileBtn, desktop: desktopBtn, target });
+ });
+ 
+  document.body.appendChild(mobileNav);
+  document.body.appendChild(desktopNav);
+  
+  // Функция прокрутки десктопного списка
+  function scrollDesktopList(activeIdx) {
+    const itemHeight = 50; // высота одного пункта
+    const containerHeight = 350; // высота контейнера
+    const visibleItems = 7; // количество видимых пунктов
+    const halfVisible = Math.floor(visibleItems / 2); // 3
+    
+    // Вычисляем смещение так, чтобы активный пункт был в центре
+    let offset = activeIdx - halfVisible;
+    
+    // Ограничиваем диапазон прокрутки
+    const maxOffset = Math.max(0, buttons.length - visibleItems);
+    offset = Math.max(0, Math.min(offset, maxOffset));
+    
+    // Применяем смещение
+    desktopList.style.transform = `translateY(-${offset * itemHeight}px)`;
+  }
+  
+  // Скроллспай
+  const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+  if (entry.isIntersecting) {
+  const idx = targets.findIndex(t => t.el === entry.target);
+  if (idx !== -1) {
+  buttons.forEach((b, i) => {
+  const isActive = i === idx;
+  b.mobile.classList.toggle('active', isActive);
+  b.desktop.classList.toggle('active', isActive);
+  });
+  // Прокручиваем десктопный список
+  scrollDesktopList(idx);
+  }
+  }
+  });
+  }, {
+  rootMargin: '-30% 0px -60% 0px',
+  threshold: 0
+  });
+  
+  targets.forEach(t => observer.observe(t.el));
+  
+  // Активируем первую точку
+  if (buttons.length) {
+  buttons[0].mobile.classList.add('active');
+  buttons[0].desktop.classList.add('active');
+  scrollDesktopList(0);
+  }})();
 
+// === MARQUEE ===
 $$('.marquee span').forEach(sp => { sp.innerHTML += sp.innerHTML; });
 
+// === FAQ ACCORDION ===
 $$('section').forEach(sec => {
  const l = $$('details', sec);
  if (l.length < 2) return;
@@ -272,8 +259,10 @@ $$('section').forEach(sec => {
  });
 });
 
+// === LAZY LOADING ===
 $$('iframe, video').forEach(el => { el.setAttribute('loading', 'lazy'); });
 
+// === PARALLAX ===
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
  const hero = document.querySelector('.hero-media'),
  cta = document.querySelector('.final-cta');
@@ -292,57 +281,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
  tick();
 }
 
-(function(){
- const tabs = $$('.tab-btn'), contents = $$('.interview-content');
- if (!tabs.length) return;
- tabs.forEach(tab => tab.addEventListener('click', () => {
- tabs.forEach(t => t.classList.remove('active'));
- contents.forEach(c => c.classList.remove('active'));
- tab.classList.add('active');
- const tc = $('.interview-content.' + tab.dataset.tab);
- if (tc) tc.classList.add('active');
- }));
-})();
-
-(function(){
- const section = $('#new-models');
- if (!section) return;
- const tabs = $$('.insta-tab', section),
- gallery = $('.insta-gallery', section),
- locFilters = $('.location-filters', section),
- locBtns = $$('.loc-btn', section),
- cards = $$('.insta-model-card', section);
- if (!gallery || !tabs.length) return;
-
- tabs.forEach(tab => tab.addEventListener('click', () => {
- tabs.forEach(t => t.classList.remove('active'));
- tab.classList.add('active');
- const view = tab.dataset.view;
- gallery.dataset.view = view;
- if (view === 'location') {
- if (locFilters) locFilters.hidden = false;
- } else {
- if (locFilters) locFilters.hidden = true;
- cards.forEach(c => c.style.display = '');
- if (locBtns.length) {
- locBtns.forEach(b => b.classList.remove('active'));
- locBtns[0].classList.add('active');
- }
- }
- }));
-
- if (locBtns.length) {
- locBtns.forEach(btn => btn.addEventListener('click', () => {
- locBtns.forEach(b => b.classList.remove('active'));
- btn.classList.add('active');
- const city = btn.dataset.city;
- cards.forEach(card => {
- card.style.display = (city === 'all' || card.dataset.city === city) ? '' : 'none';
- });
- }));
- }
-})();
-
+// === STORIES SCROLL ===
 document.querySelectorAll('.stories a.story[href^="#"]').forEach(a => {
  a.addEventListener('click', e => {
  const id = a.getAttribute('href').slice(1);
@@ -367,293 +306,76 @@ document.querySelectorAll('.stories a.story[href^="#"]').forEach(a => {
  });
 });
 
+// === TELEGRAM LINKS ===
 document.querySelectorAll('a[href^="https://t.me"]').forEach(a => {
- a.setAttribute('target', '_blank');
- a.setAttribute('rel', 'noopener');
+  a.setAttribute('target', '_blank');
+  a.setAttribute('rel', 'noopener');
 });
 
-// === ОБНОВЛЕННЫЙ КОД ДЛЯ РАЗДЕЛА "ИНТЕРВЬЮ" ===
+// === MEDIA MODEL VIDEO TRACKS ===
 (function(){
- const interviewSection = $('#interview');
- if (!interviewSection) return;
-
- const switchBtns = $$('.interview-switch-btn', interviewSection);
- const questionsMode = $('#interviewQuestions', interviewSection);
- const modelsMode = $('#interviewModels', interviewSection);
- const modelCards = $$('.model-card', interviewSection);
- const modal = $('#interviewModal', interviewSection);
- const modalBody = $('#modalBody', interviewSection);
- const modalClose = $('.modal-close', modal);
-
- const interviewsData = {
-  anya: {
-   name: 'Аня', age: '20 лет', info: 'Два мероприятия',
-   answers: [
-    'Аня, 20 лет, два мероприятия.',
-    'Нашла сайт в яндексе',
-    'Высокий гонорар, чувствуется серьезный подход, это резко контрастировало со следующими агентствами, а дальше не искала.',
-    'Первое мероприятие - это был романтический вечер. Там просто заработала. Потом сразу тебе сказала, что меня интересуют только люди из моего круга. потому что я хочу расти в своей сфере.',
-    'Перед первым ничего не боялась. Всё прошло хорошо. так как и обговаривали. А вот перед вторым - боялась. Это было мероприятия, на котором были много влиятельных людей , с которыми мне нужно было познакомиться и наладить отношения. Я очень боялась, что не знала как они отнесуться к тому, что я из эскорта. Ну ничего, как выяснилось, это нормальная ситуация. Я сопровождала человека на форуме, потом мы продолжили общение',
-    'Да не запомнилось особо. Провела время и все. Второе мероприятие - оно важное. Оно запомнилось',
-    'На втором мероприятии я сидела за одним столом с деканом своего факультета.',
-    'То, что мне нравился мой спутник. Он был интересен. И я поняла, что поступила правильно',
-    'Я получила заявку. Отправила анкету. Мне ответили. Всё',
-    'Я написала. Мы созвонились. Поговорили. Потом, встретились. Я показала, что умею. Всё чудесно',
-    'ДЛя меня карьера -это всё. Я очень люблю международное право и буду в нем развиваться. Это главное',
-    'Нет не знают. Да мне и всё равно',
-    'Не распыляйся на ненужных людей. Выбирай заказы. Ты молодец',
-    'Поскольку я свободно говорю на английском и на немецком, меня интересуют зарубежное сопровождение. В идеале - деловое и романтическое. Про гонорар - ну не знаю. В Зависимости от продолжительности. От 5.000.000.. Так же готова к мероприятиям здесь в Москве с иностранными гостями'
-   ]
-  },
-  maria: {
-   name: 'Мария', age: '22 года', info: 'Пять мероприятий',
-   answers: [
-    'Мария. 22 года, студентка актерского факультета',
-    'Познакомила общая знакомая. Не из эскорта',
-    'Я про другие не знаю. не интересовалась',
-    'у меня было пять мероприятий: 4 встречи, 5-е сначала тоже была встреча, потом предложил мне составить компанию в совместном путешествии. Теперь я с ним же на постоянной основе',
-    'Мне было 19 лет. Я боялась всего.',
-    'Мужчина понимал, что я очень волновалась. Мы поужинали в ресторане и на этом решили разойтись. Мужчина подарил мне просто так 100.000 за беспокойство. Для меня это тогда были серьезные деньги.',
-    'Интересные все. Но самое сильное впечатление, это на мероприятие мы летали на вертолете. туда и обратно. Я не могу рассказать деталей. Но было круто',
-    'То, что ты меня всему научил. Я всегда была открыта к людям, но не к мужчинам. ты во мне это исправил.',
-    'Я к анкете приложила визитку. Только вся в белом.помоему сработало))',
-    'я пришла. разделась. и мы просто начали разговаривать. А дальше я набрала обороты и поговорили обо всём))',
-    'Я кайфую от того, что мной восхищаются. А выражается это в гонорарах',
-    'Нет, никто не знает',
-    'ничего такого. ты делаешь всё правильно',
-    'Пока что я сосредоточена на карьере. Поэтому токо встречи в москве от 1000000'
-   ]
-  },
-  sonya: {
-   name: 'Соня', age: '19 лет', info: 'Одно мероприятие',
-   answers: [
-    'Соня. 19 лет. На одном и оно продолжается, но я не исключаю вариант, что найду что-то повыгоднее',
-    'Погуглила дорогой эскорт',
-    'Я хотела стать эскортницей по вызову. Ты меня переубедил этим не заниматься. Я решила попробовать с тобой, если что, думала, что в любой момент могу уйти туда',
-    'Одна встреча. Мужчина сразу сказал, что ищет постоянную основу. А эту встречу он оплатил , чтобы со мной познакомиться, потому что понравилась по анкете',
-    'Не было страхов. Я была готова ко всему, но оказалось все проще',
-    'Мы встретились. Поужинали в ресторане, покатались по городу. Получила много всего, первый подарок - мне оплатили обучение на права. Сняли квартиру. В которой живу одна. Хожу в зал, пробую разные курсы, но пока ничего не нравиться',
-    'Однажды мы с мужчиной ехали. На светофоре остановились и я в окне автобуса который тоже остановился, увидела своего бывшего одноклассника, а он увидел меня. Он в автобусе, я - в лендровере. Пока мальчик',
-    'То, что я богиня',
-    'Я отвечала на все заявки. На эту получила ок. Я не знала к кому я иду. Пришла и все получилось',
-    'Я научилась общаться. Думала, что умею.. Что там уметь? А нет. Ты научил меня до уровня "богиня общения"',
-    'Это значит тусить. Кайфовать.',
-    'Нет не знают. Я не хочу чтобы мои будущие мужчины знали.Я хочу чтобы они думали что я на их мероприятии в первый раз в качестве эскорт модели',
-    'Молодец, девочка, что попробовала',
-    'Хочу долгосрочный контракт, который больше чем сейчас. на 2-3 миллиона в месяц и больше'
-   ]
-  },
-  victoria: {
-   name: 'Виктория', age: '21 год', info: 'Одно мероприятие',
-   answers: [
-    'Виктория. 21 год. медсестра',
-    'через поиск',
-    'Мне важна конфиденциальность. Мне понравилось что у тебя нет каталогов с моделями.',
-    'одно мероприятие. заработала 500.000',
-    'Я очень долго ждала первый заказ. больше двух лет. Я очень нервничала. То, что мужчина оплатил мне перелет до москвы и гостиницу - заставляло нервничать еще сильнее',
-    'Мужчина приехал ко мне в гостиницу. Мы поговорили.Потом поехали покататься по городу. Он мне показал Москву. Поужинали. Вернулись в номер. Получила подарочек',
-    'Я впервые увидела Москва-Сити. Меня это впечатлило. Потом мы поднялись в ресторан на верхнем этаже.',
-    'То, что ты меня подготовил',
-    'Я не особо верила в то, что меня выберут, при условии, что мне лететь через пол страны. Поэтому отвечала не на все заказы',
-    'Когда я прилетела в Москву, ты меня встретил и привез в гостиницу. Мы с тобой поговорили, ты показал, как это делать лучше. Я перестала волноваться. Через четыре дня мы встретились уже с заказчиком',
-    'Я знаю, что это ненадолго. Поэтому, пока красивая, хочу накопить денег',
-    'Нет конечно',
-    'Надо было раньше начинать',
-    'К интересным романтическим'
-   ]
-  },
-  katya: {
-   name: 'Катя', age: '23 года', info: 'Три мероприятия',
-   answers: [
-    'Катя 23 года, была на 3 мероприятиях.',
-    'Подруга посоветовала',
-    'Другие не искала. просто доверилась',
-    'Сначала отдала кредиты. Потом согласилась еще на одно. Потом еще одно. Трачу деньги на себя',
-    'Страха не было. Немного волновалась. Успокоило то, что ты мне всё рассказал и четко проинструктировал, всему научил. К тому же, видела пример подруги, так что всё прошло нормально.',
-    'Первое мероприятие - это было свидание. Я хотела блеснуть эрудицией, но мужчина оказался опытнее меня, поэтому я молчала и слушала. Хотя мужчина оценил мою увлеченность. ПОтом, как ты советовал, взяла инициативу в свои руки. Показала заранее заготовленные ролики и сказала что хочу так же. Поехали и воплотили. Оказалось, это проще, чем я сама себе накручивала',
-    'Все по-своему интересны. Мне самой интересно было экспериментировать. Подготовила ролики и интересные цены, которая предложила воплотить.',
-    'Мне нравится контролировать мужчин, и спасибо тебе, что ты только с такими меня и знакомишь. Еще мне нравиться то, что все трое мужчина пытались пригасить меня повторно.',
-    'На первой встрече ты мне сказал: "Задавай любые вопросы". Я задавала по моему сотни две вопросов что как и ты на все ответил. Потом мы приехали к тебе и ты сказал "командуй" И я сделала все что хотела и даже то, всегда где то глубоко во мне.',
-    'Мы катались катались. Я чувствовала себя королевой и красивой и в тоже время властной. Я научилась разговаривать с мужчинами. Понимать что хочу и не боятся говорить про это. Я рассталась с парнем и нашла себе нового. Хорошего и классного.',
-    'Я считаю себя богиней кекса. Мне нравиться подтверждение этого денежным эквивалентом.',
-    'Нет. Мой парень сделал мне предложение. Думаю, всё этим сказано',
-    'Катя, ты лучшая! Не сомневайся в этом и действуй!',
-    'Посмотрим. Я готова к достойным предложениям'
-   ]
-  },
-  alisa: {
-   name: 'Алиса', age: '24 года', info: 'Одно путешествие',
-   answers: [
-    'Алиса, 24 года. Я была в одном путешествии',
-    'Меня привела подруга. Она сказала , что есть мужчина, которому нужны две девушки для сопровождение в Китай. Отдохнуть и поработать. Подруга предложила подать заявку от нас двоих',
-    'Я другие не смотрела',
-    'У меня это одно мероприятие. До этого я работала в парфюмерном лакшери бутике. После мероприятия, решила начать работать в недвижимости.',
-    'Перед мероприятием, мужчина дал нам с подружкой деньги, чтобы мы купили что нам понадобиться в поездке. Поэтому было доверие',
-    'Я ожидала что мы с девочками просидим в гостинице, потому что сопровождение по рабочим вопросам не требовалось, А получилось так, что мы только один день погуляли с девочками по гуанчжоу,а потом уже с мужчиной покатались по городу. езде побывали, покатались на катере, а потом он предложил полететь в Тайланд и мы тусили еще два дня там.',
-    'Мы ели много всего экзотического и в Китае и в Тае. От шашлыка из крокодила, до еще что даже не запомнила',
-    'То, что была рядом подруга',
-    'Это было удивительно. Мы с подругой приехали к тебе, потому что первое знакомство с мужчиной было по скайпу. Когда мы приехали, у тебя была другая девочка блогер. Первое что я ей сказала.. оо. я на тебя подписана. Потом мы долго ждали, когда мужчина сможет выйти на связь, у него были какие-то внезапные дела. До этого мы катались вчетвером. Потом позвонил мужчина. Мы уже готовые. Хотели даже покататься при включенном скайпе. Я думала что мужчина выберет двоих из нас троих. Думала , что меня не выберет. А мужчина взял всех троих.',
-    'Сначала мы созвонились. Потом встретились уже втроем: я , ты и моя подруга. Ни я ни моя подруга никогда не пробовали кататься втроем, но все прошло лучше и интереснее , чем можно было представить.',
-    'Возможности. Больше всего не люблю упускать возможности.',
-    'Только подруга и всё',
-    'Не тормози. Пока молодая - всё получиться',
-    'Люблю путешествовать и в моем приоритете - поездки от 3000000'
-   ]
-  },
-  dasha: {
-   name: 'Даша', age: '19 лет', info: 'Одно мероприятие',
-   answers: [
-    'Меня зовут Даша. Я была на одном мероприятии',
-    'Через поиск. Я давно про тебя знала, но долго решалась',
-    'Я общалась с представителями других агентств. Но у них какие-то маленькие суммы, что даже как-то не интересно.',
-    'У меня было только одно мероприятие. Надо было составить компани мужчине. Мы разговаривали наверное часов пять. Заказывали еду и напитки аж три раза.У меня менялись вкусы. На самом деле, мне просто очень нравилось заказывать.',
-    'Да не боялась. Просто пришла, зная, что если что уйду в любой момент',
-    'Я ожидала то, что и все ожидают. Но, мы просто веселились и разговаривали о его проблемах с женой и детьми.',
-    'Я объелась',
-    'Ты. Твои советы и то, чему ты меня научил',
-    'Я написала. Отправила фотки. ПОтом созвонились . Мужчина просто так мне денег на хорошее настроение.',
-    'Я приехала. Пы покатались. ты всё рассказал. Или надо поподробнее?',
-    'Это интересно',
-    'Нет. И я думаю не узнают.',
-    'Никогда никуда не опаздывай. Уважай чужое время. Я опоздала к тебе тогда, но ты простил',
-    'На любые. Встречи от полумиллиона, все остальное -обсуждаемо'
-   ]
-  }
- };
-
- const questions = [
-  'Представься, сколько тебе лет и на скольких мероприятиях ты была?',
-  'Как ты про меня узнала?',
-  'Чем я отличаюсь от других агентств или предложений, которые ты видела?',
-  'Сколько у тебя всего было мероприятий? Что тебе это дало?',
-  'Расскажи о своих страхах перед первым твоим мероприятием?',
-  'Расскажи о первом мероприятии. Чего ты ожидала? Как всё прошло? Что ты получила?',
-  'Расскажи о самом интересном мероприятии или случае, который с тобой произошёл?',
-  'Что помогает тебе чувствовать себя свободно на мероприятии?',
-  'Расскажи про кастинг на мероприятие, о котором ты рассказала?',
-  'Расскажи, как прошло наше с тобой собеседование? Что ты чувствовала? Чему научилась? Как тебе это помогло?',
-  'Что для тебя значит быть моделью в элитном сопровождении? Не работа, а именно смысл?',
-  'Твои знакомые знают про то, что ты в элитном эскорте?',
-  'Какие бы ты дала советы самой себе, если бы только начинала?',
-  'К каким новым мероприятиям ты готова и на какой гонорар рассчитываешь?'
- ];
-
- // 1. Переключение табов
- switchBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-   switchBtns.forEach(b => b.classList.remove('active'));
-   btn.classList.add('active');
-   const mode = btn.dataset.mode;
-   if (mode === 'questions') {
-    questionsMode.style.display = '';
-    modelsMode.style.display = 'none';
-   } else {
-    questionsMode.style.display = 'none';
-    modelsMode.style.display = '';
-   }
-  });
- });
-
- // 2. Генерация панелек вопросов
- if (questionsMode) {
-  const qList = document.createElement('div');
-  qList.className = 'questions-list';
-  
-  questions.forEach((q, index) => {
-   const panel = document.createElement('div');
-   panel.className = 'question-panel';
-   panel.dataset.qIndex = index;
-   panel.innerHTML = '<div class="qp-info"><h3>Вопрос ' + (index + 1) + '</h3><p>' + q + '</p></div>';
-   qList.appendChild(panel);
-  });
-  questionsMode.appendChild(qList);
-
-  // 3. Клик по панельке вопроса
-  $$('.question-panel', questionsMode).forEach(panel => {
-   panel.addEventListener('click', () => {
-    const qIndex = parseInt(panel.dataset.qIndex);
-    const qText = questions[qIndex];
-    
-    let html = '<div class="modal-q-header"><div class="modal-q-num">Вопрос ' + (qIndex + 1) + '</div><h3 class="modal-q-text">' + qText + '</h3></div><div class="modal-answers-list">';
-    
-    Object.keys(interviewsData).forEach(key => {
-     const model = interviewsData[key];
-     const answer = model.answers[qIndex] || 'Ответ отсутствует';
-     html += '<div class="modal-answer-item"><div class="mai-name">' + model.name + ', ' + model.age + '</div><p class="mai-text">' + answer + '</p></div>';
+  $$('.model-videos .mv-track').forEach(track => {
+    track.addEventListener('click', () => {
+      const videoUrl = track.getAttribute('data-video');
+      if (!videoUrl) return;
+      
+      // Создаём модалку для видео
+      let modal = document.querySelector('.model-video-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'model-video-modal';
+        modal.innerHTML = `
+          <div class="model-video-modal-content">
+            <button class="model-video-modal-close">
+              <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <video controls playsinline>
+              <source src="" type="video/mp4">
+            </video>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Закрытие модалки
+        const closeBtn = modal.querySelector('.model-video-modal-close');
+        closeBtn.addEventListener('click', () => {
+          modal.classList.remove('open');
+          const video = modal.querySelector('video');
+          video.pause();
+        });
+        
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.classList.remove('open');
+            const video = modal.querySelector('video');
+            video.pause();
+          }
+        });
+      }
+      
+      // Открываем модалку с видео
+      const video = modal.querySelector('video');
+      const source = modal.querySelector('source');
+      source.src = videoUrl;
+      video.load();
+      modal.classList.add('open');
+      video.play().catch(() => {});
     });
-    html += '</div>';
-    
-    if (modalBody) modalBody.innerHTML = html;
-    if (modal) {
-     modal.classList.add('open');
-     document.body.style.overflow = 'hidden';
-    }
-   });
   });
- }
-
- // 4. Клик по карточке модели
- modelCards.forEach(card => {
-  card.addEventListener('click', () => {
-   const modelKey = card.dataset.model;
-   const data = interviewsData[modelKey];
-   if (!data || !modalBody) return;
-
-   let html = '<div class="modal-model-header"><h3>' + data.name + ', ' + data.age + '</h3><p>' + data.info + '</p></div>';
-   questions.forEach((q, i) => {
-    const answer = data.answers[i] || '';
-    html += '<div class="modal-question"><div class="modal-question-num">Вопрос ' + (i + 1) + '</div><div class="modal-question-text">' + q + '</div><p class="modal-answer">' + answer + '</p></div>';
-   });
-
-   modalBody.innerHTML = html;
-   modal.classList.add('open');
-   document.body.style.overflow = 'hidden';
-  });
- });
-
- // 5. Закрытие модалки
- function closeModal() {
-  if (modal) {
-   modal.classList.remove('open');
-   document.body.style.overflow = '';
-  }
- }
-
- if (modalClose) modalClose.addEventListener('click', closeModal);
- if (modal) {
-  modal.addEventListener('click', e => {
-   if (e.target === modal) closeModal();
-  });
- }
- document.addEventListener('keydown', e => {
-  if (modal && modal.classList.contains('open') && e.key === 'Escape') closeModal();
- });
 })();
-
-// === ПЛЕЕР ДЛЯ ИНТЕРВЬЮ ===
-document.querySelectorAll('.video-play-btn').forEach(btn => {
- btn.addEventListener('click', () => {
-  const container = btn.closest('.video-container');
-  const video = container.querySelector('video');
-  if (video) {
-   video.muted = false;
-   video.play();
-   container.classList.add('playing');
-  }
- });
-});
-})();
-// === КАРТОЧКИ МОДЕЛЕЙ СО СТОРИС ===
+// === MODEL STORIES MODAL ===
 (function(){
-const photoModal = document.createElement('div');
-photoModal.className = 'model-stories-modal';
-photoModal.innerHTML = '<button class="msm-close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button><div class="msm-content"><div class="msm-progress"><div class="msm-progress-bar"></div></div><div class="msm-slider"></div><button class="msm-nav msm-prev"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><button class="msm-nav msm-next"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button><div class="msm-counter"></div></div>';
-document.body.appendChild(photoModal);
+// Создаём модальное окно
+function createModal() {
+ const modal = document.createElement('div');
+ modal.className = 'model-stories-modal';
+ modal.innerHTML = '<button class="msm-close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button><div class="msm-content"><div class="msm-progress"><div class="msm-progress-bar"></div></div><div class="msm-slider"></div><button class="msm-nav msm-prev"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><button class="msm-nav msm-next"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button><div class="msm-counter"></div></div>';
+ document.body.appendChild(modal);
+ return modal;
+}
 
-const videoModal = document.createElement('div');
-videoModal.className = 'model-stories-modal';
-videoModal.innerHTML = '<button class="msm-close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button><div class="msm-content"><div class="msm-progress"><div class="msm-progress-bar"></div></div><div class="msm-slider"></div><button class="msm-nav msm-prev"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><button class="msm-nav msm-next"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button><div class="msm-counter"></div></div>';
-document.body.appendChild(videoModal);
+const photoModal = createModal();
+const videoModal = createModal();
 
 let currentModal = null;
 let items = [];
@@ -771,19 +493,71 @@ progressInterval = null;
 }
 }
 
+// Фото моделей для модалки
+const modelPhotos = {
+ katya: [
+ 'https://storage.yandexcloud.net/modeli/media/models/kate/kate-1-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/kate/kate-2-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/kate/kate-3-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/kate/kate-4-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/kate/kate-5-compressed.webp'
+ ],
+ lizz: [
+ 'https://storage.yandexcloud.net/modeli/media/models/lizz/lizz-1-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lizz/lizz-2-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lizz/lizz-3-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lizz/lizz-4-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lizz/lizz-5-compressed.webp'
+ ],
+ alina: [
+ 'https://storage.yandexcloud.net/modeli/media/models/alina/alina-1-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/alina/alina-2-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/alina/alina-3-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/alina/alina-4-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/alina/alina-5-compressed.webp'
+ ],
+ lena: [
+ 'https://storage.yandexcloud.net/modeli/media/models/lena/lena-1-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lena/lena-2-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lena/lena-3-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lena/lena-4-compressed.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/lena/lena-5-compressed.webp'
+ ],
+ tanya: [
+ 'https://storage.yandexcloud.net/modeli/media/models/tanya/tanya-1.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/tanya/tanya-2.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/tanya/tanya-3.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/tanya/tanya-4.webp',
+ 'https://storage.yandexcloud.net/modeli/media/models/tanya/tanya-5.webp'
+ ],
+  zhenya: [
+  'https://storage.yandexcloud.net/modeli/media/models/zenya/zenya-1-compressed.webp',
+  'https://storage.yandexcloud.net/modeli/media/models/zenya/zenya-2-compressed.webp',
+  'https://storage.yandexcloud.net/modeli/media/models/zenya/zenya-3-compressed.webp',
+  'https://storage.yandexcloud.net/modeli/media/models/zenya/zenya-4-compressed.webp',
+  'https://storage.yandexcloud.net/modeli/media/models/zenya/zenya-5-compressed.webp'
+  ],
+  kristina: [
+  'https://storage.yandexcloud.net/modeli/media/constant.webp',
+  'https://storage.yandexcloud.net/modeli/media/b2-nikolay.webp',
+  'https://storage.yandexcloud.net/modeli/media/b2-referral.webp',
+  'https://storage.yandexcloud.net/modeli/media/b2-theatre.webp',
+  'https://storage.yandexcloud.net/modeli/media/b2-restaurant.webp'
+  ],
+  olya: [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1000&fit=crop',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&h=1000&fit=crop',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1000&fit=crop',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&h=1000&fit=crop',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=1000&fit=crop'
+  ]
+ };
 // Клик по аватарке (фото)
 $$('.story-trigger[data-type="photos"]').forEach(trigger => {
 trigger.addEventListener('click', () => {
 const model = trigger.dataset.model;
-items = [
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-1-compressed.webp',
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-2-compressed.webp',
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-3-compressed.webp',
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-4-compressed.webp',
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-5-compressed.webp',
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-6-compressed.webp',
-'storage.yandexcloud.net/modeli/media/models/lizz/lizz-7-compressed.webp'
-];
+items = modelPhotos[model] || [];
+idx = 0;
 openModal(photoModal, 'photo');
 });
 });
@@ -823,4 +597,162 @@ else prev();
 }
 }, {passive: true});
 });
+
+// === BOOKS DESIGN — НОВЫЙ ДИЗАЙН БЛОКОВ-КНИЖЕК ===
+(function() {
+  const books = $$('.cinema.reveal');
+  if (!books.length) return;
+
+  const ioBook = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('on');
+        // Не удаляем наблюдение, чтобы панельки тоже анимировались
+      }
+    });
+  }, { threshold: 0.1 });
+
+  books.forEach(book => {
+    // Добавляем data-атрибуты по умолчанию (photo)
+    const chapters = book.querySelectorAll('.cinema-chapter');
+    chapters.forEach(chapter => {
+      if (!chapter.dataset.bookMedia) {
+        chapter.dataset.bookMedia = 'photo';
+      }
+      if (!chapter.dataset.bookSrc && chapter.dataset.photo) {
+        chapter.dataset.bookSrc = chapter.dataset.photo;
+      }
+    });
+
+    // Наблюдаем за панельками для reveal анимации
+    const panels = book.querySelectorAll('.cinema-text');
+    panels.forEach(panel => {
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateY(30px)';
+      panel.style.transition = 'opacity 0.6s cubic-bezier(.22,.61,.2,.1), transform 0.6s cubic-bezier(.22,.61,.2,.1)';
+      
+      const panelIo = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('on');
+          }
+        });
+      }, { threshold: 0.1 });
+      panelIo.observe(panel);
+    });
+
+    // Обработка видео с кнопками Play/mute
+    const videoContainers = book.querySelectorAll('[data-book-media="video"]');
+    videoContainers.forEach(container => {
+      const src = container.dataset.bookSrc;
+      if (!src) return;
+
+      container.innerHTML = `
+        <div class="book-media-container video-container">
+          <video src="${src}" playsinline muted loop></video>
+          <button class="play-btn" aria-label="Play">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button class="mute-btn" aria-label="Mute">
+            <svg class="icon-mute" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            <svg class="icon-unmute" viewBox="0 0 24 24" style="display:none"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          </button>
+        </div>
+      `;
+
+      const video = container.querySelector('video');
+      const playBtn = container.querySelector('.play-btn');
+      const muteBtn = container.querySelector('.mute-btn');
+      const iconMute = container.querySelector('.icon-mute');
+      const iconUnmute = container.querySelector('.icon-unmute');
+
+      let isMuted = true;
+
+      playBtn.addEventListener('click', () => {
+        video.play();
+        playBtn.style.opacity = '0';
+        setTimeout(() => playBtn.style.display = 'none', 300);
+      });
+
+      muteBtn.addEventListener('click', () => {
+        isMuted = !isMuted;
+        video.muted = isMuted;
+        iconMute.style.display = isMuted ? 'block' : 'none';
+        iconUnmute.style.display = isMuted ? 'none' : 'block';
+      });
+    });
+
+    // Обработка iframe
+    const iframeContainers = book.querySelectorAll('[data-book-media="iframe"]');
+    iframeContainers.forEach(container => {
+      const src = container.dataset.bookSrc;
+      if (!src) return;
+      container.innerHTML = `<iframe src="${src}" frameborder="0" allowfullscreen class="book-media-frame"></iframe>`;
+    });
+
+    // Обработка слайдера фото
+    const sliderContainers = book.querySelectorAll('[data-book-media="slider"]');
+    sliderContainers.forEach(container => {
+      const srcs = (container.dataset.bookSrc || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (!srcs.length) return;
+
+      let slidesHtml = '';
+      srcs.forEach(src => {
+        slidesHtml += `<div class="slider-slide"><img src="${src}" alt=""></div>`;
+      });
+
+      container.innerHTML = `
+        <div class="book-slider">
+          <div class="slider-track">${slidesHtml}</div>
+          <div class="slider-dots"></div>
+        </div>
+      `;
+
+      const track = container.querySelector('.slider-track');
+      const dotsContainer = container.querySelector('.slider-dots');
+
+      srcs.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Слайд ' + (i + 1));
+        dot.addEventListener('click', () => {
+          track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+        });
+        dotsContainer.appendChild(dot);
+      });
+
+      track.addEventListener('scroll', () => {
+        const index = Math.round(track.scrollLeft / track.clientWidth);
+        container.querySelectorAll('.slider-dot').forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+      });
+    });
+
+    // Обработка одиночного фото (по умолчанию)
+    const photoContainers = book.querySelectorAll('[data-book-media="photo"]');
+    photoContainers.forEach(container => {
+      const src = container.dataset.bookSrc;
+      if (!src) return;
+      container.innerHTML = `<img src="${src}" alt="" class="book-media-img">`;
+    });
+
+    // Обработка кнопки "Читать дальше"
+    const readMoreBtns = book.querySelectorAll('.cinema-readmore');
+    readMoreBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const fullContent = btn.previousElementSibling;
+        if (fullContent && fullContent.classList.contains('cinema-full')) {
+          fullContent.classList.toggle('on');
+          btn.textContent = fullContent.classList.contains('on') ? 'Свернуть' : 'Читать дальше';
+        }
+      });
+    });
+
+    ioBook.observe(book);
+  });
 })();
+
+})(); // Закрывает MODEL STORIES MODAL
+
+

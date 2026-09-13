@@ -1,0 +1,23 @@
+```
+# Web build artifacts
+*.js
+*.css
+*.html
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+.env.
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+```
